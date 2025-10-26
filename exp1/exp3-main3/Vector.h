@@ -36,13 +36,13 @@ private:
         delete[] old;
     }
 
-    // 归并排序辅助函数：合并两个有序子区间 [left, mid] 和 [mid+1, right]
+    // 褰掑苟鎺掑簭杈呭姪鍑芥暟锛氬悎骞朵袱涓湁搴忓瓙鍖洪棿 [left, mid] 鍜?[mid+1, right]
     void merge(int left, int mid, int right) {
-        // 创建临时数组存储合并结果
+        // 鍒涘缓涓存椂鏁扮粍瀛樺偍鍚堝苟缁撴灉
         T* temp = new T[right - left + 1];
         int i = left, j = mid + 1, k = 0;
 
-        // 合并两个子区间
+        // 鍚堝苟涓や釜瀛愬尯闂?
         while (i <= mid && j <= right) {
             if (elements_[i] <= elements_[j]) {
                 temp[k++] = elements_[i++];
@@ -51,25 +51,25 @@ private:
             }
         }
 
-        // 处理剩余元素
+        // 澶勭悊鍓╀綑鍏冪礌
         while (i <= mid) temp[k++] = elements_[i++];
         while (j <= right) temp[k++] = elements_[j++];
 
-        // 复制回原数组
+        // 澶嶅埗鍥炲師鏁扮粍
         for (k = 0; k < right - left + 1; ++k) {
             elements_[left + k] = temp[k];
         }
 
-        delete[] temp;  // 释放临时数组内存
+        delete[] temp;  // 閲婃斁涓存椂鏁扮粍鍐呭瓨
     }
 
-    // 归并排序递归函数
+    // 褰掑苟鎺掑簭閫掑綊鍑芥暟
     void mergeSort(int left, int right) {
-        if (left >= right) return;  // 递归终止条件
-        int mid = left + (right - left) / 2;  // 避免溢出
-        mergeSort(left, mid);                 // 排序左半部分
-        mergeSort(mid + 1, right);            // 排序右半部分
-        merge(left, mid, right);              // 合并结果
+        if (left >= right) return;  // 閫掑綊缁堟鏉′欢
+        int mid = left + (right - left) / 2;  // 閬垮厤婧㈠嚭
+        mergeSort(left, mid);                 // 鎺掑簭宸﹀崐閮ㄥ垎
+        mergeSort(mid + 1, right);            // 鎺掑簭鍙冲崐閮ㄥ垎
+        merge(left, mid, right);              // 鍚堝苟缁撴灉
     }
 
 public:
@@ -155,9 +155,9 @@ public:
         quick_sort(0, size_ - 1);
     }
 
-    // 归并排序接口（供外部调用）
+    // 褰掑苟鎺掑簭鎺ュ彛锛堜緵澶栭儴璋冪敤锛?
     void sort_merge() {
-        if (size_ <= 1) return;  // 空数组或单元素数组无需排序
+        if (size_ <= 1) return;  // 绌烘暟缁勬垨鍗曞厓绱犳暟缁勬棤闇€鎺掑簭
         mergeSort(0, size_ - 1);
     }
 
@@ -169,6 +169,20 @@ public:
             if (i != size_ - 1) cout << ", ";
         }
         cout << "]" << endl;
+    }
+    
+    // Assignment operator
+    Vector<T>& operator=(const Vector<T>& other) {
+        if (this != &other) {
+            delete[] elements_;
+            size_ = other.size_;
+            capacity_ = other.capacity_;
+            elements_ = new T[capacity_];
+            for (int i = 0; i < size_; ++i) {
+                elements_[i] = other.elements_[i];
+            }
+        }
+        return *this;
     }
 
 private:
