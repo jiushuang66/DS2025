@@ -7,27 +7,27 @@
 template <typename T>
 class Stack {
 private:
-    T* _data;       // 存储元素的动态数组
-    int _size;      // 当前元素数量
-    int _capacity;  // 容量
+    T* _data;       // 瀛樺偍鍏冪礌鐨勫姩鎬佹暟缁?
+    int _size;      // 褰撳墠鍏冪礌鏁伴噺
+    int _capacity;  // 瀹归噺
 
-    // 扩容函数，确保有足够空间存储新元素
+    // 鎵╁鍑芥暟锛岀‘淇濇湁瓒冲绌洪棿瀛樺偍鏂板厓绱?
     void expand() {
-        if (_size < _capacity) return;  // 无需扩容
-        _capacity = (_capacity == 0) ? 1 : _capacity * 2;  // 初始容量为1，之后翻倍
+        if (_size < _capacity) return;  // 鏃犻渶鎵╁
+        _capacity = (_capacity == 0) ? 1 : _capacity * 2;  // 鍒濆瀹归噺涓?锛屼箣鍚庣炕鍊?
         T* newData = new T[_capacity];
         for (int i = 0; i < _size; ++i) {
-            newData[i] = _data[i];  // 复制元素
+            newData[i] = _data[i];  // 澶嶅埗鍏冪礌
         }
-        delete[] _data;  // 释放旧空间
+        delete[] _data;  // 閲婃斁鏃х┖闂?
         _data = newData;
     }
 
 public:
-    // 构造函数
+    // 鏋勯€犲嚱鏁?
     Stack() : _data(nullptr), _size(0), _capacity(0) {}
 
-    // 拷贝构造函数
+    // 鎷疯礉鏋勯€犲嚱鏁?
     Stack(const Stack<T>& other) : _size(other._size), _capacity(other._capacity) {
         _data = new T[_capacity];
         for (int i = 0; i < _size; ++i) {
@@ -35,15 +35,15 @@ public:
         }
     }
 
-    // 析构函数
+    // 鏋愭瀯鍑芥暟
     ~Stack() {
         delete[] _data;
     }
 
-    // 赋值运算符
+    // 璧嬪€艰繍绠楃
     Stack<T>& operator=(const Stack<T>& other) {
-        if (this != &other) {  // 避免自赋值
-            delete[] _data;    // 释放当前资源
+        if (this != &other) {  // 閬垮厤鑷祴鍊?
+            delete[] _data;    // 閲婃斁褰撳墠璧勬簮
             _size = other._size;
             _capacity = other._capacity;
             _data = new T[_capacity];
@@ -54,19 +54,19 @@ public:
         return *this;
     }
 
-    // 入栈操作
+    // 鍏ユ爤鎿嶄綔
     void push(const T& element) {
-        expand();               // 确保容量足够
-        _data[_size++] = element;  // 存储元素并更新大小
+        expand();               // 纭繚瀹归噺瓒冲
+        _data[_size++] = element;  // 瀛樺偍鍏冪礌骞舵洿鏂板ぇ灏?
     }
 
-    // 出栈操作，返回栈顶元素
+    // 鍑烘爤鎿嶄綔锛岃繑鍥炴爤椤跺厓绱?
     T pop() {
-        assert(_size > 0 && "Stack is empty!");  // 检查栈非空
-        return _data[--_size];  // 更新大小并返回元素
+        assert(_size > 0 && "Stack is empty!");  // 妫€鏌ユ爤闈炵┖
+        return _data[--_size];  // 鏇存柊澶у皬骞惰繑鍥炲厓绱?
     }
 
-    // 获取栈顶元素（不删除）
+    // 鑾峰彇鏍堥《鍏冪礌锛堜笉鍒犻櫎锛?
     T& top() {
         assert(_size > 0 && "Stack is empty!");
         return _data[_size - 1];
@@ -77,29 +77,29 @@ public:
         return _data[_size - 1];
     }
 
-    // 清空栈
+    // 娓呯┖鏍?
     void clear() {
-        _size = 0;  // 逻辑清空，不释放内存
+        _size = 0;  // 閫昏緫娓呯┖锛屼笉閲婃斁鍐呭瓨
     }
 
-    // 判断栈是否为空
+    // 鍒ゆ柇鏍堟槸鍚︿负绌?
     bool empty() const {
         return _size == 0;
     }
 
-    // 获取栈的大小
+    // 鑾峰彇鏍堢殑澶у皬
     int size() const {
         return _size;
     }
 
-    // 交换两个栈的内容
+    // 浜ゆ崲涓や釜鏍堢殑鍐呭
     void swap(Stack<T>& other) {
         std::swap(_data, other._data);
         std::swap(_size, other._size);
         std::swap(_capacity, other._capacity);
     }
 
-    // 比较两个栈是否相等
+    // 姣旇緝涓や釜鏍堟槸鍚︾浉绛?
     bool operator==(const Stack<T>& other) const {
         if (_size != other._size) return false;
         for (int i = 0; i < _size; ++i) {
@@ -108,9 +108,16 @@ public:
         return true;
     }
 
-    // 比较两个栈是否不相等
+    // 姣旇緝涓や釜鏍堟槸鍚︿笉鐩哥瓑
     bool operator!=(const Stack<T>& other) const {
         return !(*this == other);
+    }
+    
+    // 原位构造元素
+    template<typename... Args>
+    void emplace(Args&&... args) {
+        expand();
+        _data[_size++] = T(std::forward<Args>(args)...);  // 原位构造
     }
 };
 
